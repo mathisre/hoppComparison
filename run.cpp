@@ -121,6 +121,8 @@ void run::runCurrent(class params *p) //2D only so far!!!
   double  Ex, Ey, Ez, energy,t, Hx, Hy, Hz; // mc,
   int L, D, N, steps, run, runs; //, im, i, s, f
 
+  printf("\n-----Setting up system-----\n\n");
+
   steps = p->timesteps;
   D = p->dim;
   L = p->len;
@@ -183,17 +185,17 @@ void run::runCurrent(class params *p) //2D only so far!!!
     fflush(stdout);
 
     MKcurr->jumpsToFileSmall(p->outputprefix + "jumps_" + p->outputendfix + "_run_" + IntToStr(run) + ".dat",steps);
-    MKcurr->heatMapToFile(   p->outputprefix + "map_" + p->outputendfix + "_run_" + IntToStr(run) + ".dat",steps);
+//    MKcurr->heatMapToFile(   p->outputprefix + "map_" + p->outputendfix + "_run_" + IntToStr(run) + ".dat",steps);
 
-    MKcurr->normalizeMap(MKcurr->positions, steps);
-    MKcurr->writeMapToFile(MKcurr->positions, p->outputprefix  + "electronMap_" + p->outputendfix + "_run_" + IntToStr(run) + ".dat");
-    MKcurr->writeMapToFile(MKcurr->movement,  p->outputprefix  + "electronMovement_" + p->outputendfix + "_run_" + IntToStr(run) + ".dat");
+//    MKcurr->normalizeMap(MKcurr->positions, steps);
+  //  MKcurr->writeMapToFile(MKcurr->positions, p->outputprefix  + "electronMap_" + p->outputendfix + "_run_" + IntToStr(run) + ".dat");
+   // MKcurr->writeMapToFile(MKcurr->movement,  p->outputprefix  + "electronMovement_" + p->outputendfix + "_run_" + IntToStr(run) + ".dat");
     fflush(stdout);
 
 //    MKcurr->currentToFile(p->outputprefix+"r"+IntToStr(run)+"curr.dat",steps);
-    es->nstofile(   p->outputprefix + "final_config_" + p->outputendfix + "_run_" + IntToStr(run) +".dat");
-    es->spestofile( p->outputprefix + "SPE_" + p->outputendfix + "_run_" + IntToStr(run) +".dat");
-    es->movedtofile(p->outputprefix + "moved_particles_" + p->outputendfix + "_run_" + IntToStr(run) +".dat");
+//    es->nstofile(   p->outputprefix + "final_config_" + p->outputendfix + "_run_" + IntToStr(run) +".dat");
+//    es->spestofile( p->outputprefix + "SPE_" + p->outputendfix + "_run_" + IntToStr(run) +".dat");
+//    es->movedtofile(p->outputprefix + "moved_particles_" + p->outputendfix + "_run_" + IntToStr(run) +".dat");
     printf("Etter fil\n");
   }
  delete esc;

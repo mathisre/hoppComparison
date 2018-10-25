@@ -48,7 +48,8 @@ int main(int argc, char* argv[])
   }
 
   delete p;
-
+  
+  //auto start = std::chrono::system_clock::now();
 //  std::chrono::duration<double> diff = end - start;
 //  printf("Elapsed time: %.3f min\n",diff.count() / 60.0);
 

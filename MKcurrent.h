@@ -48,6 +48,7 @@ public:
     void normalizeMap(std::vector<std::vector<double> > &vector, int steps);
     void writeMapToFile(std::vector<std::vector<double>> vector, string filename);
     void writeGammaToFile(double Hz);
+    CRandomMersenne *RanGen;
 
 
 
@@ -70,6 +71,7 @@ private:
     double GammaTtot, maxProbability, GammaTtot3Sites, totGammaTtot;
     int Nmem,Nmem3Sites, nGamma3Sites;
     int *dxInter,*dyInter,*dxFinal,*dyFinal;
+    int testedNumberOf2Site, testedNumberOf3Site, numberOf2Site, numberOf3Site;
 	double A, beta; //2/a, for the localization...
 
 	double deltat;
@@ -79,8 +81,7 @@ private:
 	double *energy,*ts,*des;
 	int *MCsteps;
 	int *dxs;
-	int *dys;
-	CRandomMersenne *RanGen;
+    int *dys;
 
     double Ex, Ey, Ez, E0x, E0y, E0z, Hx, Hy, Hz;
 	double tMC,omega;

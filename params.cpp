@@ -75,8 +75,8 @@ void params::readparams(int n, char* cmdline[])
   xpbc = true; //periodic boundary condition in x-direction can be lifted
   outputprefix = "../../data/";
   char Hz_s [10], Ex_s[10], temp_s[10];
-  sprintf(Hz_s, "%.2f", Hz);
-  sprintf(Ex_s, "%.2f", Ex);
+  sprintf(Hz_s, "%.4f", Hz);
+  sprintf(Ex_s, "%.4f", Ex);
   sprintf(temp_s, "%.4f", temp);
 
 
@@ -94,7 +94,7 @@ void params::readparams(int n, char* cmdline[])
        if(pf->getstring("trace") == "yes") trace = true;
        if(pf->getstring("xpbc") == "no") xpbc = false;
        if(stopfilename == "") stopfilename = "stop";
-       doTriJumps = bool(pf->getint("doTriJumps", doTriJumps));
+       doTriJumps = bool(pf->getint("triJumps", doTriJumps));
        Ex = pf->getdouble("Ex",Ex);
        Ey = pf->getdouble("Ey",Ey);
        Ez = pf->getdouble("Ez",Ez);
@@ -148,15 +148,14 @@ void params::readparams(int n, char* cmdline[])
        tracenum = pf->getint("tracenum",tracenum);
        writelines = pf->getint("writelines",writelines);
    }
-    outputprefix = "../../data/";
     char Hz_s [10], Ex_s[10], temp_s[10];
-    sprintf(Hz_s, "%.2f", Hz);
-    sprintf(Ex_s, "%.2f", Ex);
+    sprintf(Hz_s, "%.4f", Hz);
+    sprintf(Ex_s, "%.4f", Ex);
     sprintf(temp_s, "%.4f", temp);
 
 
-    if (doTriJumps==true) outputendfix = "Hz_" + string(Hz_s)+  "_Ex_" + string(Ex_s) + "_T_" + string(temp_s) + "_steps_" + to_string(timesteps);
-    else outputendfix = "_noTri_Hz_" + string(Hz_s)+  "_Ex_" + string(Ex_s) + "_T_" + string(temp_s) + "_steps_" + to_string(timesteps);
+    if (doTriJumps==true) outputendfix = "Hz_" + string(Hz_s)+  "_Ex_" + string(Ex_s) + "_T_" + string(temp_s);
+    else outputendfix = "noTri_Hz_" + string(Hz_s)+  "_Ex_" + string(Ex_s) + "_T_" + string(temp_s);
    delete pf;
   }
 }

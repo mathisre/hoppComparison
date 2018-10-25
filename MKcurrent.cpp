@@ -116,7 +116,7 @@ void MKcurrent::init(int D1, int L1, int N1, int maxJL1, double a1, double beta1
       for (n = 0; n < Nmem/2; n++)
       {
         // HERE IS WHERE TO PUT 2SITE RATE CALC
-        gamma += tau1*exp(-2*A*jl[n]);
+        gamma += exp(-A*jl[n]);
         GammaT[n] = gamma;
 //        std::cout << GammaT[n] - GammaT[n-1] << std::endl;
         //printf("%le ",gamma); if ((n+1)%JL2==0) printf("\n");
@@ -124,7 +124,7 @@ void MKcurrent::init(int D1, int L1, int N1, int maxJL1, double a1, double beta1
       GammaT[Nmem/2] = gamma;
       for (n = Nmem/2 + 1; n < Nmem; n++)
       {
-        gamma += tau1*exp(-A*jl[n]);
+        gamma += exp(-A*jl[n]);
         GammaT[n] = gamma;
 //        std::cout << GammaT[n] - GammaT[n-1] << std::endl;
       }
@@ -417,9 +417,6 @@ bool inline MKcurrent::testjump3sites(int i, int j, int k, int dx, int dy, int d
 //  dE2 = (dx+dxI)*Ex + (dy+dyI)*Ey + dE1;
   dE2 = (dx+dxI)*Ex + (dy+dyI)*Ey + dEij + dEik + dEjk;
 
-//  cout << "dE1: " << dE1 << endl;
-//  cout << "dE2: " << dE2 << endl;
-
   exponent = beta*dE2;
 //  printf("Exponent 3 site = %f\n",exponent);
 //  printf("3 site dx: %d and dy: %d\n",dx, dy);
@@ -474,10 +471,10 @@ void MKcurrent::runCurrent(int steps,double &E, double &t)
   meanJumpLength = 0;
   meandx = 0;
   meandy = 0;
-  int testedNumberOf2Site = 0;
-  int testedNumberOf3Site = 0;
-  int numberOf2Site = 0;
-  int numberOf3Site = 0;
+  testedNumberOf2Site = 0;
+  testedNumberOf3Site = 0;
+  numberOf2Site = 0;
+  numberOf3Site = 0;
   for (s = 0; s < steps; s++)
   {
       MCs = 0;
@@ -487,16 +484,16 @@ void MKcurrent::runCurrent(int steps,double &E, double &t)
               MCs++;
 //              updateMap();
               if ((es->ran2(0))<prob2Site){
-//                testedNumberOf2Site++;
+                testedNumberOf2Site++;
                 getjump(i,j,dx,dy);
                 jump=testjump(i,j,dx,dy);
-//                if (jump == true) numberOf2Site++;
+                if (jump == true) numberOf2Site++;
               }
               else{
-//                testedNumberOf3Site++;
+                testedNumberOf3Site++;
                 getjump3sites(i,j,k,dx,dy,dxI,dyI);
                 jump=testjump3sites(i,j,k,dx,dy,dxI,dyI);
-//                if (jump == true) numberOf3Site++;
+                if (jump == true) numberOf3Site++;
               }
       }
 //      updateMovement(i,j);
@@ -507,9 +504,9 @@ void MKcurrent::runCurrent(int steps,double &E, double &t)
       E += dE;
       t += dt;
 
-//      meanJumpLength += sqrt(dx*dx+dy*dy);
-//      meandx += dx;
-//      meandy += dy;
+      meanJumpLength += sqrt(dx*dx+dy*dy);
+      meandx += dx;
+      meandy += dy;
 
       from[s] = i;
       to[s]   = j;
@@ -521,14 +518,14 @@ void MKcurrent::runCurrent(int steps,double &E, double &t)
       dys[s] = dy;
 
       MCsteps[s]=MCs;
-      if (s%1000==0) printf("%5d E=%le MCs=%d\n",s,E,MCs);
+      if (s%10000==0) printf("%5d E=%le MCs=%d\n",s,E,MCs);
  
      // printf("Step: %d: %d %d dE: %le I:%le MCs: %d\n", s, i, j,energy[s],dx,MCsteps[s]);
     }
   meanJumpLength /= steps;
   meandx /= steps;
   meandy /= steps;
-  printf("Mean jump length: %f\n", meanJumpLength);
+  printf("\nMean jump length: %f\n", meanJumpLength);
   printf("Mean dx: %f\n", meandx);
   printf("Mean dy: %f\n", meandy);
   printf("Acceptance ratio for 2 site: %.3f, 3 site: %.3f\n", double(numberOf2Site)/testedNumberOf2Site, double(numberOf3Site)/testedNumberOf3Site);
@@ -617,7 +614,7 @@ void MKcurrent::jumpsToFileSmall(string filename, int steps)
   cumdy=0;
   f=FileCreate(filename);
 
-  st="t  \t \t E \t \t from \t to \t dx \t dy \t MCs \t dE \t tMC="+DoubleToStr(tMC)+ "\t <jl>=" + DoubleToStr(meanJumpLength) + "\n";
+  st="t  \t \t E \t \t from \t to \t dx \t dy \t MCs \t dE \t tMC="+DoubleToStr(tMC)+ "\t <jl>=" + DoubleToStr(meanJumpLength) +"\t <dx>=" + DoubleToStr(meandx) +"\t <dy>=" + DoubleToStr(meandy) + "\t Acc 2=" + DoubleToStr(double(numberOf2Site)/testedNumberOf2Site)+ "\t Acc 3=" + DoubleToStr(double(numberOf3Site)/testedNumberOf3Site) + "\n";
   FileWrite(f,st.c_str(),st.length());
 
   for(s = 0; s < steps; s++){
